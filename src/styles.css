@@ -1,0 +1,186 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * DIGITAL PRIME — porcelain / ink / cobalt research instrument.
+ * Warm porcelain ground, ink typography, one intentional cobalt accent,
+ * subtle glass surfaces. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --font-display: "DM Serif Display", Georgia, serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-mono: "Manrope", system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-elevated: var(--elevated);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-verified: var(--verified);
+  --color-observation: var(--observation);
+  --color-inference: var(--inference);
+  --color-gold: var(--primary);
+  --color-gold-muted: var(--primary-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--verified);
+  --color-warning: var(--observation);
+  --color-info: var(--inference);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-chart-1: var(--primary);
+  --color-chart-2: var(--inference);
+  --color-chart-3: var(--verified);
+  --color-chart-4: var(--observation);
+  --color-chart-5: var(--muted-foreground);
+}
+
+:root {
+  --radius: 0.125rem;
+
+  --background: #f5f3ee;
+  --foreground: #171719;
+  --surface: #ffffff;
+  --surface-foreground: #171719;
+  --elevated: #fbfaf7;
+  --glass: rgba(255, 255, 255, 0.58);
+  --glass-border: rgba(23, 23, 25, 0.08);
+
+  --card: #ffffff;
+  --card-foreground: #171719;
+  --popover: #ffffff;
+  --popover-foreground: #171719;
+
+  --primary: #3157d5;
+  --primary-foreground: #ffffff;
+  --primary-soft: #dde5fa;
+  --secondary: #ece9e2;
+  --secondary-foreground: #171719;
+  --muted: #ece9e2;
+  --muted-foreground: #6c6c72;
+  --accent: #dde5fa;
+  --accent-foreground: #1e3a9c;
+
+  --verified: #708b78;
+  --observation: #b58a4a;
+  --inference: #756a9a;
+  --destructive: #b8645a;
+  --destructive-foreground: #ffffff;
+
+  --border: rgba(23, 23, 25, 0.1);
+  --border-strong: rgba(23, 23, 25, 0.2);
+  --input: rgba(23, 23, 25, 0.14);
+  --ring: rgba(49, 87, 213, 0.45);
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #171719;
+  --sidebar-primary: #3157d5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #dde5fa;
+  --sidebar-accent-foreground: #1e3a9c;
+  --sidebar-border: rgba(23, 23, 25, 0.1);
+  --sidebar-ring: rgba(49, 87, 213, 0.45);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    line-height: 1.08;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-soft);
+    color: var(--color-foreground);
+  }
+}
+
+/* Small structural label — sans, gentle tracking, never shouty. */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+@utility hairline {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Paper panel — quiet white card on porcelain. */
+@utility panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+/* Subtle glass surface — translucency, never neon. */
+@utility glass {
+  background-color: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+}
+
+/* Signature element: a thin cobalt line beside a conclusion. */
+@utility cobalt-rule {
+  border-left: 2px solid var(--color-primary);
+  padding-left: 1.25rem;
+}
