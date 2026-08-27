@@ -1,0 +1,17 @@
+{
+  "name": "Digital Prime Research",
+  "short_name": "Digital Prime",
+  "description": "Evidence-backed research for digital growth.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48 64x64",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ]
+}

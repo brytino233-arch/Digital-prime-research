@@ -6,5 +6,10 @@ export default defineConfig({
   },
   nitro: {
     preset: "vercel",
+    rollupConfig: {
+      output: {
+        inlineDynamicImports: true,
+      },
+    },
   },
 });

@@ -393,7 +393,7 @@ function ProspectDetailPage() {
                     Page {page.page} — {page.title}
                   </p>
                   <CopyButton
-                    text={`PAGE ${page.page} — ${page.title}\nHeading: ${page.heading}\nCopy: ${page.copy}\nEvidence: ${page.evidence}\nSuggested visual: ${page.visual}\nKey message: ${page.keyMessage}`}
+                    text={`--- ${page.title} ---\n${page.heading}\n\n${page.copy}\n\nEvidence: ${page.evidence.map(e => e.claim).join("; ")}\nVisual: ${page.visual}\nKey message: ${page.keyMessage}`}
                     label="Copy section"
                   />
                 </div>
@@ -401,8 +401,12 @@ function ProspectDetailPage() {
                 <p className="mt-2 text-sm whitespace-pre-line">{page.copy}</p>
                 <dl className="mt-4 grid gap-x-8 text-xs text-muted-foreground sm:grid-cols-3">
                   <div>
-                    <dt className="eyebrow">Evidence</dt>
-                    <dd className="mt-1">{page.evidence}</dd>
+                    <dt className="eyebrow">Key evidence</dt>
+                    <dd className="mt-1 space-y-1">
+                      {page.evidence.length > 0 ? page.evidence.map((e, i) => (
+                        <p key={i}>• {e.claim} <span className="text-[10px] block opacity-70">({e.source})</span></p>
+                      )) : <p>None recorded.</p>}
+                    </dd>
                   </div>
                   <div>
                     <dt className="eyebrow">Suggested visual</dt>

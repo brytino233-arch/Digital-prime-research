@@ -43,3 +43,4 @@ src/server.ts.bak
 src/lib/research/real-research.server.ts.backup
 src/csrf-diag.ts
 src/lib/lovable-error-reporting.ts
+.vercel
