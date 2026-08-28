@@ -105,23 +105,21 @@ export type OutreachDraft = {
   follow_up: string;
 };
 
-/** Formatter for bottleneck descriptions to natural language. */
+/** Formatter for bottleneck descriptions to natural language. 
+ * Test cases:
+ * - "absence of a centralized digital booking" -> "there isn't a centralized digital booking"
+ * - "lack of online booking" -> "there isn't a online booking"
+ * - "limited mobile experience" -> "the mobile experience could be stronger"
+ * - "no clear call to action" -> "there isn't a clear call to action"
+ * - "confusing navigation" -> "the confusing navigation"
+ */
 export function formatProblem(problem: string): string {
   const p = problem.toLowerCase().trim();
   
-  if (!p) return "the digital experience could be stronger";
-
-  // Deterministic transformation rules
-  if (p.startsWith("lack of ") || p.startsWith("absence of ")) {
-    const feature = p.replace(/^(lack of |absence of )/, "");
-    return `there isn't a ${feature}`;
-  }
-  if (p.startsWith("no ")) {
-    return `there isn't a ${p.substring(3)}`;
-  }
-  if (p.includes("limited ")) {
-    return p.replace("limited ", "the ") + " could be stronger";
-  }
+  if (p.startsWith("lack of ")) return `there isn't a ${p.substring(8)}`;
+  if (p.startsWith("absence of ")) return `there isn't a ${p.substring(11)}`;
+  if (p.startsWith("no ")) return `there isn't a ${p.substring(3)}`;
+  if (p.startsWith("limited ")) return `the ${p.substring(8)} could be stronger`;
   
   // Default natural phrasing
   return p.startsWith("the ") ? p : `the ${p}`;
@@ -138,9 +136,11 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
   const bottleneck = report?.bottlenecks?.[0];
   const companyName = prospect.name.replace(" (demo)", "");
   
-  // Build concise problem observation
+  // Evidence-driven observation
+  const observation = bottleneck ? `I noticed ${formatProblem(bottleneck.problem)}.` : "";
+  const opening = `${greeting} I’m [Your Name] from Digital Prime.`;
   const problem = bottleneck 
-    ? `I’ve been looking at ${companyName}'s online presence and noticed ${formatProblem(bottleneck.problem)}.`
+    ? `I’ve been looking at ${companyName}'s online presence and ${observation}`
     : `I’ve been researching ${companyName}'s digital presence.`;
 
   if (variation === "curious") {
@@ -148,11 +148,13 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
       target: contact?.name ?? NOT_VERIFIED,
       channel,
       variation,
-      opening: `${greeting} I’m [Your Name] from Digital Prime.`,
+      opening,
       problem,
-      value: `I have a few thoughts on how that might be improved to help your visitors get where they need to go.`,
-      cta: `Would you be open to a quick look at a 1-page audit I put together? No pressure at all—just some notes that might be useful.`,
-      follow_up: `I know you're busy—just checking in on the above.`,
+      value: bottleneck 
+        ? `I have some thoughts on how that could be improved.` 
+        : `I’d love to share some thoughts on how ${companyName}'s digital presence could be sharpened.`,
+      cta: `Would you be open to seeing a 1-page audit I put together for you?`,
+      follow_up: `Just checking in on the above.`,
     };
   }
 
@@ -161,11 +163,13 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
     target: contact?.name ?? NOT_VERIFIED,
     channel,
     variation,
-    opening: `${greeting} I’m [Your Name] from Digital Prime.`,
+    opening,
     problem,
-    value: `I put together a 1-page audit on how ${companyName} might improve that to make the experience smoother for your visitors.`,
-    cta: `Would you like me to send that over?`,
-    follow_up: `Just following up gently—if this isn't a priority, I completely understand.`,
+    value: bottleneck 
+      ? `I put together a 1-page audit showing how I’d approach that.`
+      : `I put together a 1-page audit showing how I’d approach sharpening ${companyName}'s digital presence.`,
+    cta: `Want me to send it over?`,
+    follow_up: `Just following up on this in case it got buried.`,
   };
 }
 
