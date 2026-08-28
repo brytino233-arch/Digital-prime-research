@@ -105,6 +105,28 @@ export type OutreachDraft = {
   follow_up: string;
 };
 
+/** Formatter for bottleneck descriptions to natural language. */
+export function formatProblem(problem: string): string {
+  const p = problem.toLowerCase().trim();
+  
+  if (!p) return "the digital experience could be stronger";
+
+  // Deterministic transformation rules
+  if (p.startsWith("lack of ") || p.startsWith("absence of ")) {
+    const feature = p.replace(/^(lack of |absence of )/, "");
+    return `there isn't a ${feature}`;
+  }
+  if (p.startsWith("no ")) {
+    return `there isn't a ${p.substring(3)}`;
+  }
+  if (p.includes("limited ")) {
+    return p.replace("limited ", "the ") + " could be stronger";
+  }
+  
+  // Default natural phrasing
+  return p.startsWith("the ") ? p : `the ${p}`;
+}
+
 /** Generates respectful, evidence-bounded outreach copy. */
 export function buildOutreach(detail: ProspectDetail, variation: "direct" | "curious" = "direct"): OutreachDraft {
   const { prospect, report } = detail;
@@ -116,23 +138,10 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
   const bottleneck = report?.bottlenecks?.[0];
   const companyName = prospect.name.replace(" (demo)", "");
   
-  // Transform bottleneck into natural language
-  function formatProblem(problem: string) {
-    const lowerProblem = problem.toLowerCase();
-    
-    // Handle "lack/absence of"
-    if (lowerProblem.startsWith("lack of") || lowerProblem.startsWith("absence of")) {
-      return `it doesn't appear to have a ${lowerProblem.replace(/^(lack of|absence of) /, "")}`;
-    }
-    
-    // Handle general observations
-    return lowerProblem.startsWith("the") ? lowerProblem : `the ${lowerProblem}`;
-  }
-
-  // Create evidence-based problem context
-  const problemContext = bottleneck 
-    ? `I’ve been researching ${companyName}'s digital experience, and I noticed that ${formatProblem(bottleneck.problem)}.`
-    : `I’ve been researching ${companyName}'s digital experience recently.`;
+  // Build concise problem observation
+  const problem = bottleneck 
+    ? `I’ve been looking at ${companyName}'s online presence and noticed ${formatProblem(bottleneck.problem)}.`
+    : `I’ve been researching ${companyName}'s digital presence.`;
 
   if (variation === "curious") {
     return {
@@ -140,25 +149,23 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
       channel,
       variation,
       opening: `${greeting} I’m [Your Name] from Digital Prime.`,
-      problem: problemContext,
-      value: bottleneck 
-        ? `I have a few ideas on how to address that specific area, based on what's working well for others in your industry.`
-        : `I have a few ideas on how to improve the digital experience based on what's working well for others in your industry.`,
-      cta: `Would you be open to seeing a brief, 1-page audit I put together? No pressure at all—just some notes that might be useful for your team.`,
-      follow_up: `I know you're likely busy—just checking in on the above.`,
+      problem,
+      value: `I have a few thoughts on how that might be improved to help your visitors get where they need to go.`,
+      cta: `Would you be open to a quick look at a 1-page audit I put together? No pressure at all—just some notes that might be useful.`,
+      follow_up: `I know you're busy—just checking in on the above.`,
     };
   }
 
-  // "Direct" variation refinement
+  // "Direct" variation
   return {
     target: contact?.name ?? NOT_VERIFIED,
     channel,
     variation,
     opening: `${greeting} I’m [Your Name] from Digital Prime.`,
-    problem: problemContext,
-    value: `I put together a one-page audit of how ${companyName} might improve that to make the experience smoother for your customers.`,
+    problem,
+    value: `I put together a 1-page audit on how ${companyName} might improve that to make the experience smoother for your visitors.`,
     cta: `Would you like me to send that over?`,
-    follow_up: `Just following up gently—if this isn't a priority right now, I completely understand.`,
+    follow_up: `Just following up gently—if this isn't a priority, I completely understand.`,
   };
 }
 
