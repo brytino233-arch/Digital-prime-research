@@ -116,9 +116,22 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
   const bottleneck = report?.bottlenecks?.[0];
   const companyName = prospect.name.replace(" (demo)", "");
   
+  // Transform bottleneck into natural language
+  function formatProblem(problem: string) {
+    const lowerProblem = problem.toLowerCase();
+    
+    // Handle "lack/absence of"
+    if (lowerProblem.startsWith("lack of") || lowerProblem.startsWith("absence of")) {
+      return `it doesn't appear to have a ${lowerProblem.replace(/^(lack of|absence of) /, "")}`;
+    }
+    
+    // Handle general observations
+    return lowerProblem.startsWith("the") ? lowerProblem : `the ${lowerProblem}`;
+  }
+
   // Create evidence-based problem context
   const problemContext = bottleneck 
-    ? `I’ve been studying how ${companyName} handles booking, and noticed that ${bottleneck.problem.toLowerCase()}.`
+    ? `I’ve been researching ${companyName}'s digital experience, and I noticed that ${formatProblem(bottleneck.problem)}.`
     : `I’ve been researching ${companyName}'s digital experience recently.`;
 
   if (variation === "curious") {
@@ -129,8 +142,8 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
       opening: `${greeting} I’m [Your Name] from Digital Prime.`,
       problem: problemContext,
       value: bottleneck 
-        ? `I have a few ideas on how to address that specific friction point, based on what's working well for others in your industry.`
-        : `I have a few ideas on how to improve the booking experience based on what's working well for others in your industry.`,
+        ? `I have a few ideas on how to address that specific area, based on what's working well for others in your industry.`
+        : `I have a few ideas on how to improve the digital experience based on what's working well for others in your industry.`,
       cta: `Would you be open to seeing a brief, 1-page audit I put together? No pressure at all—just some notes that might be useful for your team.`,
       follow_up: `I know you're likely busy—just checking in on the above.`,
     };
@@ -143,7 +156,7 @@ export function buildOutreach(detail: ProspectDetail, variation: "direct" | "cur
     variation,
     opening: `${greeting} I’m [Your Name] from Digital Prime.`,
     problem: problemContext,
-    value: `I put together a one-page audit of how ${companyName} might resolve that to make the booking journey smoother for your customers.`,
+    value: `I put together a one-page audit of how ${companyName} might improve that to make the experience smoother for your customers.`,
     cta: `Would you like me to send that over?`,
     follow_up: `Just following up gently—if this isn't a priority right now, I completely understand.`,
   };
