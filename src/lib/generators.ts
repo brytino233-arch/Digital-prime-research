@@ -109,34 +109,41 @@ export type OutreachDraft = {
 export function buildOutreach(detail: ProspectDetail, variation: "direct" | "curious" = "direct"): OutreachDraft {
   const { prospect, report } = detail;
   const contact = detail.decisionMakers[0];
-  const channel = prospect.best_contact_channel ?? "Instagram";
-  const contactName = contact?.name && !contact.name.startsWith("Demo") ? contact.name.split(" ")[0] : "there";
+  const channel = prospect.best_contact_channel ?? "email";
+  const contactName = contact?.name && !contact.name.startsWith("Demo") ? contact.name.split(" ")[0] : "";
+  const greeting = contactName ? `Hi ${contactName},` : "Hi there,";
   
   const bottleneck = report?.bottlenecks?.[0];
-  const problemStatement = bottleneck 
-    ? `I noticed that ${bottleneck.problem.toLowerCase()}`
-    : `I've been looking into ${prospect.name.replace(" (demo)", "")}'s digital presence`;
+  const companyName = prospect.name.replace(" (demo)", "");
+  
+  // Create evidence-based problem context
+  const problemContext = bottleneck 
+    ? `I’ve been studying how ${companyName} handles booking, and noticed that ${bottleneck.problem.toLowerCase()}.`
+    : `I’ve been researching ${companyName}'s digital experience recently.`;
 
   if (variation === "curious") {
     return {
       target: contact?.name ?? NOT_VERIFIED,
       channel,
       variation,
-      opening: `Hi ${contactName}, I’m [Your Name] from Digital Prime.`,
-      problem: `I was analyzing ${prospect.name.replace(" (demo)", "")}'s customer experience, and I had a question about your booking process.`,
-      value: `We've found that ${bottleneck?.problem.toLowerCase() ?? "small adjustments to the journey"} often change how many customers complete the booking.`,
-      cta: `Would you be open to a quick look at a brief audit I put together? It's just a few notes on how other businesses in your space approach this.`,
-      follow_up: `I know things get busy, just circling back in case this is worth a quick discussion.`,
+      opening: `${greeting} I’m [Your Name] from Digital Prime.`,
+      problem: problemContext,
+      value: bottleneck 
+        ? `I have a few ideas on how to address that specific friction point, based on what's working well for others in your industry.`
+        : `I have a few ideas on how to improve the booking experience based on what's working well for others in your industry.`,
+      cta: `Would you be open to seeing a brief, 1-page audit I put together? No pressure at all—just some notes that might be useful for your team.`,
+      follow_up: `I know you're likely busy—just checking in on the above.`,
     };
   }
 
+  // "Direct" variation refinement
   return {
     target: contact?.name ?? NOT_VERIFIED,
     channel,
     variation,
-    opening: `Hi ${contactName}, I’m [Your Name] from Digital Prime.`,
-    problem: `${problemStatement}.`,
-    value: `We specialize in streamlining these digital journeys to increase completions. I've put together a one-page audit of how this could work specifically for ${prospect.name.replace(" (demo)", "")}.`,
+    opening: `${greeting} I’m [Your Name] from Digital Prime.`,
+    problem: problemContext,
+    value: `I put together a one-page audit of how ${companyName} might resolve that to make the booking journey smoother for your customers.`,
     cta: `Would you like me to send that over?`,
     follow_up: `Just following up gently—if this isn't a priority right now, I completely understand.`,
   };
