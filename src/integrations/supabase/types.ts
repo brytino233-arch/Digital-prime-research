@@ -200,6 +200,7 @@ export type Database = {
           opening: string | null
           problem: string | null
           prospect_id: string
+          status: string
           target: string | null
           value: string | null
         }
@@ -212,6 +213,7 @@ export type Database = {
           opening?: string | null
           problem?: string | null
           prospect_id: string
+          status?: string
           target?: string | null
           value?: string | null
         }
@@ -224,6 +226,7 @@ export type Database = {
           opening?: string | null
           problem?: string | null
           prospect_id?: string
+          status?: string
           target?: string | null
           value?: string | null
         }
